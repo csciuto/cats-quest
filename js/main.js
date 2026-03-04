@@ -26,7 +26,15 @@ window._test = {matchVerb,matchNoun,collides,wrap,parse,showMsg,dismissMsg,addSc
   reset(){uiState="play";parserText="";msgBox=null;msgQueue=[];inventory=[];currentRoom="dining";score=0;petCount=0;itemsFound={};P.x=160;P.y=FLOOR-16;P.dir="right";P.frame=0;P.moving=false;P.layer="floor";anim={type:null,frame:0,maxFrames:0,onDone:null};trashBarrelBox.disabled=false;}
 };
 
-// ── EMBEDDED TEST RUNNER ───────────────────────────────────
-
 // ── START ─────────────────────────────────────────────────
+P.layer="floor"; P.x=160; P.y=FLOOR-16;
+startAnim("sleep",9999,null);
+setTimeout(()=>sfx.fanfare(),400);
+showMsg("You are a distinguished grey cat. Your kingdom spans three rooms. You awake from your slumber.",()=>{
+  anim={type:null,frame:0,maxFrames:0,onDone:null,jumpUp:false};
+  sfx.stretch();
+  startAnim("stretch",60,null);
+});
+showMsg("Something reaches your nose. There is a silver serving lid on the dining table — and whatever is underneath it smells absolutely extraordinary.");
+showMsg("Arrow keys to move. Just start typing to enter commands. Good luck.");
 requestAnimationFrame(loop);
