@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat's Quest — Tests</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a12; min-height: 100vh; font-family: monospace; color: #ccc; }
+
+    /* Hidden game canvas required by constants.js — the game initializes against this */
+    #game { display: none; }
+
+    /* _tov exists only so runTests() can call style.display='flex' on it without error.
+       The actual test output goes into #_tov_body which lives in #page below. */
+    #_tov { display: none; }
+
+    #page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+    }
+
+    #header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #222;
+    }
+
+    #title { color: #55FFFF; font-size: 14px; font-weight: bold; letter-spacing: 1px; }
+
+    #nav { display: flex; gap: 8px; align-items: center; }
+
+    .btn {
+      background: #111;
+      color: #888;
+      border: 1px solid #333;
+      padding: 5px 14px;
+      cursor: pointer;
+      font-family: monospace;
+      font-size: 11px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover { border-color: #55FFFF; color: #55FFFF; }
+
+    #status { color: #444; font-size: 11px; margin-bottom: 16px; font-style: italic; }
+    #status.done { display: none; }
+  </style>
+</head>
+<body>
+  <canvas id="game" width="320" height="200"></canvas>
+
+  <!-- Placeholder that runTests() sets display:flex on — kept hidden, not used for layout -->
+  <div id="_tov"></div>
+
+  <div id="page">
+    <div id="header">
+      <span id="title">CAT'S QUEST &mdash; TEST SUITE</span>
+      <div id="nav">
+        <button class="btn" onclick="rerun()">&#8635; RUN AGAIN</button>
+        <a class="btn" href="index.html">&larr; GAME</a>
+      </div>
+    </div>
+    <div id="status">Running tests&hellip;</div>
+    <!-- runTests() injects results here -->
+    <div id="_tov_body"></div>
+  </div>
+
+  <!-- dependency order matters — same as index.html -->
+  <script src="js/constants.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/font.js"></script>
+  <script src="js/collisions.js"></script>
+  <script src="js/animation.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/rooms.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/tests.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function rerun() {
+      document.getElementById('_tov_body').innerHTML = '';
+      document.getElementById('status').textContent = 'Running tests\u2026';
+      document.getElementById('status').className = '';
+      requestAnimationFrame(runTests);
+    }
+
+    // Auto-run after one frame so the game loop has started
+    window.addEventListener('load', function () {
+      requestAnimationFrame(function () {
+        runTests();
+        document.getElementById('status').className = 'done';
+      });
+    });
+  </script>
+</body>
+</html>
