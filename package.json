@@ -4,7 +4,8 @@
   "scripts": {
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "serve": "serve . -l 8080"
+    "serve": "serve . -l 8080",
+    "screenshot": "UPDATE_PREVIEW=1 playwright test e2e/smoke.spec.js"
   },
   "devDependencies": {
     "@playwright/test": "^1.50.0",

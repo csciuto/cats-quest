@@ -1,3 +1,5 @@
+**Live:** [corey.sciu.to/cats-quest](https://corey.sciu.to/cats-quest/)
+
 A zero-human-code, claude-written retro adventure!
 
 ## Development
@@ -39,3 +41,7 @@ Open `test.html` in a browser (or via the local server at `http://localhost:8080
 ## Deployment
 
 Push to `main`. GitHub Actions runs the test suite on every push and pull request. If tests pass, GitHub Pages deploys automatically (configured separately in repo settings).
+
+## Preview image
+
+`npm run screenshot` runs the Playwright smoke test and refreshes `preview.png`, used for link previews. `npm test` runs the browser tests.
