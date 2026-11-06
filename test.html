@@ -57,9 +57,9 @@
   <!-- Placeholder that runTests() sets display:flex on — kept hidden, not used for layout -->
   <div id="_tov"></div>
 
-  <div id="page">
+  <main id="page">
     <div id="header">
-      <span id="title">CAT'S QUEST &mdash; TEST SUITE</span>
+      <h1 id="title">CAT'S QUEST &mdash; TEST SUITE</h1>
       <div id="nav">
         <button class="btn" onclick="rerun()">&#8635; RUN AGAIN</button>
         <a class="btn" href="index.html">&larr; GAME</a>
@@ -68,7 +68,7 @@
     <div id="status">Running tests&hellip;</div>
     <!-- runTests() injects results here -->
     <div id="_tov_body"></div>
-  </div>
+  </main>
 
   <!-- dependency order matters — same as index.html -->
   <script src="js/constants.js"></script>
