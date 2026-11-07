@@ -25,7 +25,7 @@ npx playwright install chromium --with-deps
 ### Run tests
 
 ```bash
-npm test
+npm run test:e2e   # browser tests, including the in-game test suite (test.html)
 ```
 
 ### Debug tests (watch mode)
@@ -44,4 +44,4 @@ Push to `main`. GitHub Actions runs the test suite on every push and pull reques
 
 ## Preview image
 
-`npm run screenshot` runs the Playwright smoke test and refreshes `preview.png`, used for link previews. `npm test` runs the browser tests.
+`npm run screenshot` runs the Playwright smoke test and refreshes `preview.png`, used for link previews. `npm run test:e2e` runs the browser tests.

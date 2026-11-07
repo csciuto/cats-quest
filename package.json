@@ -2,10 +2,10 @@
   "name": "cats-quest",
   "private": true,
   "scripts": {
-    "test": "playwright test",
     "test:e2e": "playwright test",
     "serve": "python3 -m http.server 8080",
-    "screenshot": "UPDATE_PREVIEW=1 playwright test e2e/smoke.spec.js --project=desktop"
+    "screenshot": "UPDATE_PREVIEW=1 playwright test e2e/smoke.spec.js --project=desktop",
+    "test:all": "playwright test"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
