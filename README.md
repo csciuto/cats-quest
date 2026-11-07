@@ -1,6 +1,8 @@
 **Live:** [corey.sciu.to/cats-quest](https://corey.sciu.to/cats-quest/)
 
-A zero-human-code, claude-written retro adventure!
+Built with [Claude Code](https://claude.com/claude-code).
+
+A retro text-parser adventure game.
 
 ## Development
 
