@@ -69,7 +69,7 @@ function jumpOnto(noun){
   }
 
   const z=zones[noun];
-  if(!z)return false; // not a recognised surface
+  if(!z)return false; // not a recognized surface
 
   if(currentRoom!==z.room){
     const dn=(noun==="lchair"||noun==="rchair")?"chair":noun;
