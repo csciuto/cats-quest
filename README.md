@@ -1,5 +1,7 @@
 **Live:** [corey.sciu.to/cats-quest](https://corey.sciu.to/cats-quest/)
 
+How it's built: [ARCHITECTURE.md](ARCHITECTURE.md).
+
 Built with [Claude Code](https://claude.com/claude-code).
 
 A retro text-parser adventure game.
