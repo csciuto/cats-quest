@@ -97,6 +97,28 @@ function runTests(){
   G.parse("go west");eq("go west from dining → bedroom",G.state.currentRoom,"bedroom");G.dismissMsg();
   G.parse("go outside");ok("go outside gives message",G.state.msgBox!==null);
 
+  sec("Bare directions and repeat points");
+  G.reset();G.dismissMsg();
+  G.parse("east");eq("bare east moves: dining → kitchen",G.state.currentRoom,"kitchen");G.dismissMsg();
+  G.parse("w");eq("bare w moves: kitchen → dining",G.state.currentRoom,"dining");G.dismissMsg();
+  G.parse("go e");eq("go e moves: dining → kitchen",G.state.currentRoom,"kitchen");G.dismissMsg();
+  G.parse("go nowhere");inc("go hint names commands that work",G.state.msgBox.lines.join(" "),"EAST");G.dismissMsg();
+  G.parse("open fridge");G.dismissMsg();const f1=G.state.score;
+  G.parse("open fridge");G.dismissMsg();const f2=G.state.score;
+  G.parse("open fridge");G.dismissMsg();
+  ok("opening the fridge again gives no discovery points",f2-f1<5&&G.state.score-f2<5);
+  G.parse("open cabinet");G.dismissMsg();G.parse("take treats");G.dismissMsg();
+  G.parse("eat treats");for(let i=0;i<60;i++)G.tickAnim();G.dismissMsg();
+  ok("eating the treats uses them up",!G.state.inventory.includes("cat treats"));
+  const t1=G.state.score;G.parse("eat treats");G.dismissMsg();eq("no points for treats you don't have",G.state.score,t1);
+  G.parse("take treats");G.dismissMsg();ok("the empty bag can't be taken again",!G.state.inventory.includes("cat treats"));
+  G.reset();G.dismissMsg();G.state.inventory.push("catnip mouse");
+  G.parse("drop squeaky toy");G.dismissMsg();ok("drop squeaky toy leaves the catnip mouse alone",G.state.inventory.includes("catnip mouse"));
+  G.parse("eat squeaky toy");G.dismissMsg();ok("eat squeaky toy leaves the catnip mouse alone",G.state.inventory.includes("catnip mouse"));
+  G.state.inventory.push("dog toy");
+  G.parse("drop squeaky toy");G.dismissMsg();
+  ok("the squeaky toy can be dropped",!G.state.inventory.includes("dog toy")&&G.state.inventory.includes("catnip mouse"));
+
   sec("Score System");
   G.reset();G.dismissMsg();const s0=G.state.score;
   G.parse("meow");ok("meow increases score",G.state.score>s0);

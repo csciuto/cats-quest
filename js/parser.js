@@ -403,17 +403,18 @@ function parse(raw){
   nounText=nounText.replace(/^(at|the|a|an|to|on|in|into|with|my|some|this|that)\s+/g,"").replace(/^(at|the|a|an|to|on|in|into|with|my|some|this|that)\s+/g,"").trim();
 
   // ── GO DIRECTION ─────────────────────────────────────────
-  if(["go","walk","run","move","head"].includes(words[0])){
-    const d=words.slice(1).join(" ");
-    if(d.match(/east|right/)){if(currentRoom==="dining"){chgRoom("kitchen");return;}if(currentRoom==="bedroom"){chgRoom("dining");return;}showMsg("You're already as far east as you can go.");return;}
-    if(d.match(/west|left/)){if(currentRoom==="kitchen"){chgRoom("dining");return;}if(currentRoom==="dining"){chgRoom("bedroom");return;}showMsg("You're already as far west as you can go.");return;}
+  const bareDir={e:"east",w:"west",n:"north",s:"south",east:"east",west:"west",north:"north",south:"south"}[t];
+  if(bareDir||["go","walk","run","move","head"].includes(words[0])){
+    const d=bareDir||words.slice(1).join(" ");
+    if(d.match(/^e$|east|right/)){if(currentRoom==="dining"){chgRoom("kitchen");return;}if(currentRoom==="bedroom"){chgRoom("dining");return;}showMsg("You're already as far east as you can go.");return;}
+    if(d.match(/^w$|west|left/)){if(currentRoom==="kitchen"){chgRoom("dining");return;}if(currentRoom==="dining"){chgRoom("bedroom");return;}showMsg("You're already as far west as you can go.");return;}
     if(d.match(/kitchen/)){if(currentRoom==="dining"||currentRoom==="bedroom"){if(currentRoom==="bedroom")chgRoom("dining");chgRoom("kitchen");return;}showMsg("You're already in the kitchen.");return;}
     if(d.match(/bedroom|bed room/)){if(currentRoom==="dining"||currentRoom==="kitchen"){if(currentRoom==="kitchen")chgRoom("dining");chgRoom("bedroom");return;}showMsg("You're already in the bedroom.");return;}
     if(d.match(/dining/)){if(currentRoom==="kitchen"){chgRoom("dining");return;}if(currentRoom==="bedroom"){chgRoom("dining");return;}showMsg("You're already in the dining room.");return;}
-    if(d.match(/north|up/)){showMsg("There's a wall that way.");return;}
-    if(d.match(/south|down/)){showMsg("The floor is in the way.");return;}
+    if(d.match(/^n$|north|up/)){showMsg("There's a wall that way.");return;}
+    if(d.match(/^s$|south|down/)){showMsg("The floor is in the way.");return;}
     if(d.match(/outside|out/)){showMsg("Doors and windows are closed. You are a DISTINGUISHED indoor cat.");return;}
-    showMsg("Go where? Try: east, west, kitchen, dining room, bedroom.");return;
+    showMsg("Go where? Try: EAST, WEST, GO KITCHEN, GO DINING ROOM, GO BEDROOM.");return;
   }
 
   if(!verb){
@@ -444,10 +445,10 @@ function parse(raw){
 
   // ── TAKE ─────────────────────────────────────────────────
   if(verb==="take"){
-    if(nounText.includes("tuna")){if(inventory.includes("tuna")){showMsg("You already have the tuna.");return;}if(currentRoom!=="kitchen"){showMsg("No tuna here. Try the kitchen fridge.");return;}if(!itemsFound.fridgeOpened){showMsg("Open the fridge first.");return;}inventory.push("tuna");addScore(15);sfx.pickup();showMsg("You extract the tuna with your teeth. Foil-wrapped, smells INCREDIBLE.");return;}
-    if(nounText.includes("treat")){if(inventory.includes("cat treats")){showMsg("You already have the treats.");return;}if(currentRoom!=="kitchen"){showMsg("No treats here. Check kitchen cabinets.");return;}if(!itemsFound.cabinetOpened){showMsg("Open the cabinets first.");return;}inventory.push("cat treats");addScore(10);sfx.pickup();showMsg("You snag the bag of Fancy Feast treats. They rattle gloriously.");return;}
-    if(nounText.includes("catnip")||nounText.includes("catnip mouse")||nounText==="mouse"||nounText==="toy mouse"||nounText==="mouse toy"){if(inventory.includes("catnip mouse")){showMsg("You already have the catnip mouse.");return;}if(currentRoom!=="bedroom"){showMsg("No toy mouse here.");return;}if(P.layer!=="dresser"){showMsg("You can see something in the open drawer, but you'll need to jump up into the dresser to grab it.");return;}inventory.push("catnip mouse");addScore(10);sfx.pickup();showMsg("You snatch the catnip mouse from the drawer. It crinkles gloriously. Your pupils are enormous.");return;}
-    if(noun==="dogtoy"||nounText.includes("dog toy")||nounText.includes("squeaky")||nounText.includes("squeak")||nounText.includes("kong")||nounText==="toy"){if(inventory.includes("dog toy")){showMsg("You already have the squeaky toy.");return;}if(currentRoom!=="kitchen"){showMsg("No squeaky toy here. Check the kitchen by the doggie door.");return;}if(itemsFound.toyTaken){showMsg("The basket is empty. You already have it.");return;}inventory.push("dog toy");itemsFound.toyTaken=true;addScore(5);sfx.pickup();showMsg("You pick up the squeaky toy very carefully. It does not squeak. You intend to keep it that way for now.");return;}
+    if(nounText.includes("tuna")){if(inventory.includes("tuna")){showMsg("You already have the tuna.");return;}if(currentRoom!=="kitchen"){showMsg("No tuna here. Try the kitchen fridge.");return;}if(!itemsFound.fridgeOpened){showMsg("Open the fridge first.");return;}if(itemsFound.tunaEaten){showMsg("You already ate the tuna. A tragedy of your own making.");return;}inventory.push("tuna");if(!itemsFound.tunaScored){itemsFound.tunaScored=true;addScore(15);}sfx.pickup();showMsg("You extract the tuna with your teeth. Foil-wrapped, smells INCREDIBLE.");return;}
+    if(nounText.includes("treat")){if(inventory.includes("cat treats")){showMsg("You already have the treats.");return;}if(currentRoom!=="kitchen"){showMsg("No treats here. Check kitchen cabinets.");return;}if(!itemsFound.cabinetOpened){showMsg("Open the cabinets first.");return;}if(itemsFound.treatsEaten){showMsg("The bag is empty. You were thorough.");return;}inventory.push("cat treats");if(!itemsFound.treatsScored){itemsFound.treatsScored=true;addScore(10);}sfx.pickup();showMsg("You snag the bag of Fancy Feast treats. They rattle gloriously.");return;}
+    if(nounText.includes("catnip")||nounText.includes("catnip mouse")||nounText==="mouse"||nounText==="toy mouse"||nounText==="mouse toy"){if(inventory.includes("catnip mouse")){showMsg("You already have the catnip mouse.");return;}if(currentRoom!=="bedroom"){showMsg("No toy mouse here.");return;}if(P.layer!=="dresser"){showMsg("You can see something in the open drawer, but you'll need to jump up into the dresser to grab it.");return;}if(itemsFound.mouseEaten){showMsg("The drawer is empty. The catnip mouse did not survive you.");return;}inventory.push("catnip mouse");if(!itemsFound.mouseScored){itemsFound.mouseScored=true;addScore(10);}sfx.pickup();showMsg("You snatch the catnip mouse from the drawer. It crinkles gloriously. Your pupils are enormous.");return;}
+    if(noun==="dogtoy"||nounText.includes("dog toy")||nounText.includes("squeaky")||nounText.includes("squeak")||nounText.includes("kong")||nounText==="toy"){if(inventory.includes("dog toy")){showMsg("You already have the squeaky toy.");return;}if(currentRoom!=="kitchen"){showMsg("No squeaky toy here. Check the kitchen by the doggie door.");return;}if(itemsFound.toyTaken){showMsg("The basket is empty. You already have it.");return;}inventory.push("dog toy");itemsFound.toyTaken=true;if(!itemsFound.toyScored){itemsFound.toyScored=true;addScore(5);}sfx.pickup();showMsg("You pick up the squeaky toy very carefully. It does not squeak. You intend to keep it that way for now.");return;}
     sfx.error();showMsg("You can't take that.");return;
   }
 
@@ -455,15 +456,17 @@ function parse(raw){
   if(verb==="drop"){
     if(nounText.includes("tuna")&&inventory.includes("tuna")){inventory=inventory.filter(i=>i!=="tuna");showMsg("You set the tuna down. Its aroma fills the room.");return;}
     if(nounText.includes("treat")&&inventory.includes("cat treats")){inventory=inventory.filter(i=>i!=="cat treats");showMsg("You drop the treats. Tempting rattle.");return;}
-    if((nounText.includes("catnip")||nounText.includes("mouse")||nounText.includes("toy"))&&inventory.includes("catnip mouse")){inventory=inventory.filter(i=>i!=="catnip mouse");showMsg("You drop the catnip mouse. It lands with a satisfying crinkle.");return;}
+    if((nounText.includes("squeak")||nounText.includes("kong")||nounText.includes("dog toy")||(nounText==="toy"&&!inventory.includes("catnip mouse")))&&inventory.includes("dog toy")){inventory=inventory.filter(i=>i!=="dog toy");itemsFound.toyTaken=false;showMsg("You nudge the squeaky toy back into its basket by the doggie door. Silently.");return;}
+    if((nounText.includes("catnip")||nounText.includes("mouse")||nounText==="toy")&&inventory.includes("catnip mouse")){inventory=inventory.filter(i=>i!=="catnip mouse");showMsg("You drop the catnip mouse. It lands with a satisfying crinkle.");return;}
     showMsg("You're not carrying that.");return;
   }
 
   // ── EAT (items) ──────────────────────────────────────────
   if(verb==="eat"){
-    if(nounText.includes("tuna")&&inventory.includes("tuna")){inventory=inventory.filter(i=>i!=="tuna");sfx.eat();addScore(25);startAnim("eat",50,()=>showMsg("You devour the tuna. MAGNIFICENT. The pinnacle of all nine lives."));return;}
-    if(nounText.includes("treat")&&inventory.includes("cat treats")){sfx.eat();addScore(10);startAnim("eat",40,()=>showMsg("Salmon flavored! Eyes go wide. You eat three more."));return;}
-    if((nounText.includes("catnip")||nounText.includes("mouse")||nounText.includes("toy"))&&inventory.includes("catnip mouse")){sfx.pickup();addScore(15);startAnim("groom",60,()=>showMsg("You DEMOLISH the catnip mouse. Roll, kick, bunny-kick, repeat. You are FERAL. You are UNSTOPPABLE. You stop suddenly and lick your paw as if nothing happened."));inventory=inventory.filter(i=>i!=="catnip mouse");return;}
+    if(nounText.includes("tuna")&&inventory.includes("tuna")){inventory=inventory.filter(i=>i!=="tuna");itemsFound.tunaEaten=true;sfx.eat();addScore(25);startAnim("eat",50,()=>showMsg("You devour the tuna. MAGNIFICENT. The pinnacle of all nine lives."));return;}
+    if(nounText.includes("treat")&&inventory.includes("cat treats")){inventory=inventory.filter(i=>i!=="cat treats");itemsFound.treatsEaten=true;sfx.eat();addScore(10);startAnim("eat",40,()=>showMsg("Salmon flavored! Eyes go wide. You eat three more."));return;}
+    if((nounText.includes("squeak")||nounText.includes("kong")||nounText.includes("dog toy")||(nounText==="toy"&&!inventory.includes("catnip mouse")))&&inventory.includes("dog toy")){showMsg("It's rubber. It is not food. You have standards.");return;}
+    if((nounText.includes("catnip")||nounText.includes("mouse")||nounText==="toy")&&inventory.includes("catnip mouse")){itemsFound.mouseEaten=true;sfx.pickup();addScore(15);startAnim("groom",60,()=>showMsg("You DEMOLISH the catnip mouse. Roll, kick, bunny-kick, repeat. You are FERAL. You are UNSTOPPABLE. You stop suddenly and lick your paw as if nothing happened."));inventory=inventory.filter(i=>i!=="catnip mouse");return;}
     if(noun&&RO[currentRoom][noun]&&RO[currentRoom][noun].eat){sfx.eat();addScore(3);startAnim("eat",40,()=>showMsg(RO[currentRoom][noun].eat));return;}
     showMsg("You can't eat that.");return;
   }
@@ -510,8 +513,8 @@ function parse(raw){
     // Fall through to RO handler if not a surface
   }
 
-  if(verb==="open"&&noun==="fridge"){itemsFound.fridgeOpened=true;addScore(5);}
-  if(verb==="open"&&noun==="cabinet"){itemsFound.cabinetOpened=true;addScore(5);}
+  if(verb==="open"&&noun==="fridge"&&!itemsFound.fridgeOpened){itemsFound.fridgeOpened=true;addScore(5);}
+  if(verb==="open"&&noun==="cabinet"&&!itemsFound.cabinetOpened){itemsFound.cabinetOpened=true;addScore(5);}
   if(verb==="enter"||(verb==="open"&&(noun==="doorR"||noun==="doorL"))){
     if(noun==="doorR"&&currentRoom==="dining"){chgRoom("kitchen");return;}
     if(noun==="doorL"&&currentRoom==="kitchen"){chgRoom("dining");return;}
